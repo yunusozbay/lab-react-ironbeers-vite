@@ -1,9 +1,33 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function AllBeers({ beers }) {
+function AllBeers() {
+  const [beers, setBeers] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const fetchData = async () => {
+    const response = await axios.get(
+      "https://ih-beers-api2.herokuapp.com/beers"
+    );
+    setBeers(response.data);
+  };
+  const handleChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div>
+      <>
+        <label>Search</label>
+        <input
+          value={searchInput}
+          type="search"
+          placeholder="Search here"
+          onChange={handleChange}
+        />
+      </>
       {beers.map((beer) => (
         <div
           key={beer._id}

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
   
 
-function NewBeer({fetchData}) {
+function NewBeer() {
   const[name,setName] = useState('')
   const[tagline ,setTagline ] = useState('')
   const[description,setDescription] = useState('')
@@ -18,7 +18,7 @@ function NewBeer({fetchData}) {
     const response = await axios.post('https://ih-beers-api2.herokuapp.com/beers/new', newBr)
     console.log(response)
 
-    fetchData()
+
 
     setName('')
     setTagline('')
