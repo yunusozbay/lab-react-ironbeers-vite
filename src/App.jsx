@@ -1,32 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
+import Home from './components/Home'
+import {Routes, Route} from 'react-router-dom'
+import AllBeers from './components/AllBeers'
+import axios from 'axios'
+import RandomBeer from './components/RandomBeer'
+import NewBeer from './components/NewBeer'
+import NavList from './components/Navlist'
+import BeerDetails from './components/BeerDetails'
+import Search from './components/Search'
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [beers, setBeers] = useState([])
+  const [searchInput, setSearchInput] = useState('');
+  const fetchData = async () => {
+    const response = await axios.get('https://ih-beers-api2.herokuapp.com/beers')
+    setBeers(response.data)
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
+  
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <NavList/>
+    <Search searchInput={searchInput} setSearchInput={setSearchInput}/>
+    <Routes>
+      <Route path='/' element={<Home/>}/>
+      <Route path='/beers' element={<AllBeers beers={beers}/>}/>
+      <Route path='/random-beer' element={<RandomBeer/>}/>
+      <Route path='/new-beer' element={<NewBeer fetchData={fetchData}/>}/>
+      <Route path='/beers/:beerId' element={<BeerDetails beers={beers}/>}/>
+    </Routes>
     </div>
   )
 }
